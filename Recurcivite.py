@@ -125,34 +125,74 @@ def fibo_recur(n: int) -> int:
 
 def von_koch(n: int, segment: int) -> None:
     if n == 0:
+        turtle.showturtle()
+        turtle.penup()
         turtle.goto(0, 0)
+        turtle.setheading(0)
+        turtle.pendown()
+        turtle.forward(segment)
     else:
         turtle.forward(segment)
-        turtle.left(60)
+        turtle.left((60, -60)[n % 2 == 0])
         von_koch(n - 1, segment // 3)
     return
+
+
+def motif(n: int, seg: int) -> None:
+    if n > 0:
+        len_seg = seg // 3**n
+        for i in range(4):
+            turtle.forward(len_seg)
+            turtle.left((60, 240)[i == 1])
+        motif(n//2, seg)
+    else:
+        turtle.forward(seg)
+
+
+def motiif(len_tri):
+    turtle.forward(len_tri)
+    turtle.left(60)
+    turtle.forward(len_tri)
+    turtle.left(-120)
+    turtle.forward(len_tri)
+    turtle.left(60)
+    turtle.forward(len_tri)
 
 
 def von_koch_itt(
         n: int,
         segment: int,
         color: str = "black",
-        y: int = 1) -> None:
+        y: int = 0) -> None:
+
+    # turtle init
     turtle.showturtle()
     turtle.penup()
-    turtle.goto(-(segment // 2), y)
+    turtle.goto(0, y)
     turtle.setheading(0)
     turtle.pendown()
-    turtle.color(color)
-    turtle.speed(1)
-    len_tri = segment / 3
-    heading = [0, 60, 300, 0]
-    if n > 0:
-        for j in range(4):
-            turtle.seth(heading[j])
-            turtle.forward(len_tri)
-    else:
-        turtle.forward(segment)
+    turtle.speed(4)
+
+    # color list
+    colour = ("yellow", "blue", "red", "green", "purple")
+
+    # lenght segments
+    len_tri = segment // 3 ** n
+    nb_motif = 4**(n-1)
+
+    for i in range(nb_motif):
+        turtle.color(colour[i % len(colour)])
+        motiif(len_tri)
+        turtle.left((60, -120)[2 * i % nb_motif == 1])
+        print(len_tri, 3**n, colour[i % len(colour)], i, i % (n + 1) == 1)
+
+
+def temoin(segm):
+    turtle.penup()
+    turtle.goto((0, -240))
+    turtle.pendown()
+    turtle.forward(segm)
+
 
 
 if __name__ == "__main__":
@@ -166,6 +206,14 @@ if __name__ == "__main__":
     # print(fibo2(10))
     # print(algo_multi(105, 253))
     # print(algo_multi_recur(105, 253))
-    von_koch_itt(0, 100, "yellow", 0)
-    von_koch_itt(3, 100, "red", 10)
+    # von_koch(0, 300)
+    # motif(3, 100)
+    # von_koch_itt(0, 100, "yellow", 0)
+    i = 100
+    temoin(i)
+    von_koch_itt(1, i, "red", -230)
+    print("----------------------------------------------------------------")
+    von_koch_itt(2, i, "red", -200)
+    print("----------------------------------------------------------------")
+    von_koch_itt(3, i, "red", 10)
     pass
