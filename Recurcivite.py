@@ -123,18 +123,16 @@ def fibo_recur(n: int) -> int:
     return return_val
 
 
-def von_koch(n: int, segment: int) -> None:
-    if n == 0:
-        turtle.showturtle()
-        turtle.penup()
-        turtle.goto(0, 0)
-        turtle.setheading(0)
-        turtle.pendown()
-        turtle.forward(segment)
-    else:
-        turtle.forward(segment)
-        turtle.left((60, -60)[n % 2 == 0])
-        von_koch(n - 1, segment // 3)
+def von_koch(n: int, segment: int, col: str = None, y: int = None) -> None:
+    colour = ("yellow", "blue", "red", "green", "purple")
+    turtle.color(colour[n])
+    if n > 0:
+        for i in range(4):
+            turtle.forward(segment // 3)
+            turtle.left(60)
+            if i == 1:
+                turtle.left(180)
+        von_koch(n // 3, segment // 3)
     return
 
 
@@ -178,13 +176,19 @@ def von_koch_itt(
 
     # lenght segments
     len_tri = segment // 3 ** n
-    nb_motif = 4**(n-1)
-
-    for i in range(nb_motif):
+    nb_mottif = 4 ** n
+    a2n = True
+    for i in range(nb_mottif):
+        print(i, colour[i % len(colour)], i % 2 == 0 and a2n)
         turtle.color(colour[i % len(colour)])
         motiif(len_tri)
-        turtle.left((60, -120)[2 * i % nb_motif == 1])
-        print(len_tri, 3**n, colour[i % len(colour)], i, i % (n + 1) == 1)
+        nb = i % 2 == 0
+        if nb:
+            a2n = False
+            turtle.left(60)
+            a2n = True
+        else:
+            turtle.right(120)
 
 
 def temoin(segm):
@@ -192,7 +196,6 @@ def temoin(segm):
     turtle.goto((0, -240))
     turtle.pendown()
     turtle.forward(segm)
-
 
 
 if __name__ == "__main__":
@@ -211,9 +214,11 @@ if __name__ == "__main__":
     # von_koch_itt(0, 100, "yellow", 0)
     i = 100
     temoin(i)
-    von_koch_itt(1, i, "red", -230)
+    von_koch(1, i, "red", -230)
     print("----------------------------------------------------------------")
-    von_koch_itt(2, i, "red", -200)
+    von_koch(2, i, "red", -200)
     print("----------------------------------------------------------------")
-    von_koch_itt(3, i, "red", 10)
+    von_koch(3, i, "red", 10)
+    print("----------------------------------------------------------------")
+    von_koch(3, i, "red", 30)
     pass
