@@ -6,6 +6,9 @@
 import turtle
 
 
+import random as rdm
+
+
 turtle.home()
 turtle.clear()
 
@@ -123,79 +126,43 @@ def fibo_recur(n: int) -> int:
     return return_val
 
 
-def von_koch(n: int, segment: int, col: str = None, y: int = None) -> None:
-    colour = ("yellow", "blue", "red", "green", "purple")
-    turtle.color(colour[n])
+def von_koch(n: int, segment: int) -> None:
     if n > 0:
-        for i in range(4):
-            turtle.forward(segment // 3)
-            turtle.left(60)
-            if i == 1:
-                turtle.left(180)
-        von_koch(n // 3, segment // 3)
-    return
-
-
-def motif(n: int, seg: int) -> None:
-    if n > 0:
-        len_seg = seg // 3**n
-        for i in range(4):
-            turtle.forward(len_seg)
-            turtle.left((60, 240)[i == 1])
-        motif(n//2, seg)
+        von_koch(n - 1, segment / 3)
+        turtle.left(60)
+        von_koch(n - 1, segment / 3)
+        turtle.right(120)
+        von_koch(n - 1, segment / 3)
+        turtle.left(60)
+        von_koch(n - 1, segment / 3)
     else:
-        turtle.forward(seg)
+        colour = ("yellow", "blue", "red", "green", "purple")
+        turtle.color(colour[rdm.randint(0, 4)])
+        turtle.forward(segment)
 
 
-def motiif(len_tri):
-    turtle.forward(len_tri)
-    turtle.left(60)
-    turtle.forward(len_tri)
-    turtle.left(-120)
-    turtle.forward(len_tri)
-    turtle.left(60)
-    turtle.forward(len_tri)
+def flocon_koch(n: int, segment: int) -> None:
+    if n == 0:
+        turtle.forward(segment)
+    else:
+        flocon_koch(n - 1, segment / 3)
+        turtle.left(60)
+        flocon_koch(n - 1, segment / 3)
+        turtle.right(120)
+        flocon_koch(n - 1, segment / 3)
+        turtle.left(60)
+        flocon_koch(n - 1, segment / 3)
+        turtle.right(20)
 
 
-def von_koch_itt(
-        n: int,
-        segment: int,
-        color: str = "black",
-        y: int = 0) -> None:
-
+def turtle_init() -> None:
     # turtle init
     turtle.showturtle()
     turtle.penup()
-    turtle.goto(0, y)
+    turtle.goto(0, 0)
     turtle.setheading(0)
     turtle.pendown()
     turtle.speed(4)
-
-    # color list
-    colour = ("yellow", "blue", "red", "green", "purple")
-
-    # lenght segments
-    len_tri = segment // 3 ** n
-    nb_mottif = 4 ** n
-    a2n = True
-    for i in range(nb_mottif):
-        print(i, colour[i % len(colour)], i % 2 == 0 and a2n)
-        turtle.color(colour[i % len(colour)])
-        motiif(len_tri)
-        nb = i % 2 == 0
-        if nb:
-            a2n = False
-            turtle.left(60)
-            a2n = True
-        else:
-            turtle.right(120)
-
-
-def temoin(segm):
-    turtle.penup()
-    turtle.goto((0, -240))
-    turtle.pendown()
-    turtle.forward(segm)
 
 
 if __name__ == "__main__":
@@ -209,16 +176,6 @@ if __name__ == "__main__":
     # print(fibo2(10))
     # print(algo_multi(105, 253))
     # print(algo_multi_recur(105, 253))
-    # von_koch(0, 300)
-    # motif(3, 100)
-    # von_koch_itt(0, 100, "yellow", 0)
-    i = 100
-    temoin(i)
-    von_koch(1, i, "red", -230)
-    print("----------------------------------------------------------------")
-    von_koch(2, i, "red", -200)
-    print("----------------------------------------------------------------")
-    von_koch(3, i, "red", 10)
-    print("----------------------------------------------------------------")
-    von_koch(3, i, "red", 30)
+    turtle_init()
+    flocon_koch(30, 300)
     pass
