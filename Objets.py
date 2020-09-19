@@ -225,16 +225,13 @@ class JeuDeDomino:
         self.dominos = [
                 Domino(i, j)
                 for i in range(7)
-                for j in range(i, 7)
+                for j in range(i + 1)
             ]
         self.pe_per_p = (7, 6)[nb_joueur >= 3]
         self.pioch = self.get_dominos().copy()
-        self.shuffle()
         self.jeu_per_players = [Player()] * self.get_nb_player()
-        for i in range(self.get_pe_per_p()):
-            for j in range(self.get_nb_player()):
-                self.jeu_per_players[j].put_in_hand(self.get_pioche(0))
-                self.remove_pioche(0)
+        self.deal()
+        self.shuffle()
         self.print_class()
 
     def get_nb_player(self) -> int:
@@ -249,9 +246,6 @@ class JeuDeDomino:
 
     def get_pe_per_p(self) -> int:
         return self.pe_per_p
-
-    def get_pe_dealt(self) -> int:
-        return self.pe_dealt
 
     def get_jeu_per_players(self, k: int = None) -> list:
         if k is None:
@@ -270,6 +264,12 @@ class JeuDeDomino:
     def shuffle(self) -> None:
         rdm.shuffle(self.pioch)
 
+    def deal(self) -> None:
+        self.shuffle()
+        for i in range(self.get_pe_per_p()):
+            for j in self.get_jeu_per_players():
+                j.put_in_hand(self.pioch.pop(0))
+
     def remove_pioche(self, k: int) -> None:
         del self.pioch[k]
 
@@ -278,8 +278,9 @@ class JeuDeDomino:
                 "jeu de base : \n\t" +
                 ", ".join([repr(i.get_in_tuple()) for i in self.get_dominos()])
             ),
+
         for i, j in enumerate(self.get_jeu_per_players(), start=1):
-            i: Player
+            j: Player
             print(
                     "jeu du joueur {}: \n\t".format(i) +
                     ", ".join([repr(k.get_in_tuple()) for k in j.get_jeu()])
