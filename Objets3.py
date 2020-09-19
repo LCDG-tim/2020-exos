@@ -68,12 +68,12 @@ class Balle:
             self.get_screen(),
             self.get_color(),
             (self.get_x(), self.y),
-            30
+            self.get_radius()
             )
 
     def move(self) -> None:
-        self.x = self.get_x() + (1, -1)[self.get_go_left()]
-        self.y = self.get_y() + (1, -1)[self.get_go_up()]
+        self.x = self.get_x() + (1, -4)[self.get_go_left()]
+        self.y = self.get_y() + (1, -4)[self.get_go_up()]
         self.rebound()
 
     def rebound(self) -> None:
@@ -122,6 +122,7 @@ class Jeu:
 
     def add_balle(self) -> None:
         self.get_balles().append(Balle(self.get_screen()))
+        print("+1\ttotal = ", len(self.get_balles()))
 
     def remove_balle(self, k: int = 0) -> None:
         self.get_balles().pop(k)
@@ -143,8 +144,10 @@ class Jeu:
             balle: Balle
             balle.display()
 
-    def test(self):
-        self.get_balles(0).display()
+    def keep_only_one(self):
+        print("______reset______")
+        self.balles = []
+        self.add_balle()
 
     def stop_while(self) -> None:
         self.run = False
@@ -165,9 +168,7 @@ while game.get_run():
     # display background
     screen.fill((0, 0, 0))
     # déplace et affiche les balles les balles
-    # game.move_and_display()
-    balle1.move()
-    balle1.display()
+    game.move_and_display()
     # mise à jour de l'écran
     uptdate_screen()
     # on balaye les evénement de la page
@@ -182,13 +183,16 @@ while game.get_run():
                 game.stop_while()
             elif event.key == pygame.K_RETURN:
                 game.add_balle()
+            elif event.key == pygame.K_a:
+                game.keep_only_one()
         elif event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 1:
                 game.get_balles(
-                    rdm.randint(0, len(game.get_balles()))
+                    rdm.randint(0, len(game.get_balles()) - 1)
                     ).set_coord(event.pos)
             elif event.button == 2 or 3:
                 game.add_balle()
+
 
 # on quitte la fenêtre
 pygame.quit()
