@@ -126,45 +126,6 @@ def fibo_recur(n: int) -> int:
     return return_val
 
 
-def von_koch(n: int, segment: int) -> None:
-    if n > 0:
-        von_koch(n - 1, segment / 3)
-        turtle.left(60)
-        von_koch(n - 1, segment / 3)
-        turtle.right(120)
-        von_koch(n - 1, segment / 3)
-        turtle.left(60)
-        von_koch(n - 1, segment / 3)
-    else:
-        colour = ("yellow", "blue", "red", "green", "purple")
-        turtle.color(colour[rdm.randint(0, 4)])
-        turtle.forward(segment)
-
-
-def flocon_koch(n: int, segment: int) -> None:
-    if n == 0:
-        turtle.forward(segment)
-    else:
-        flocon_koch(n - 1, segment / 3)
-        turtle.left(60)
-        flocon_koch(n - 1, segment / 3)
-        turtle.right(120)
-        flocon_koch(n - 1, segment / 3)
-        turtle.left(60)
-        flocon_koch(n - 1, segment / 3)
-        turtle.right(20)
-
-
-def turtle_init() -> None:
-    # turtle init
-    turtle.showturtle()
-    turtle.penup()
-    turtle.goto(0, 0)
-    turtle.setheading(0)
-    turtle.pendown()
-    turtle.speed(4)
-
-
 if __name__ == "__main__":
     # print(somme(4))
     # print(somme_recur(4))
@@ -176,6 +137,4 @@ if __name__ == "__main__":
     # print(fibo2(10))
     # print(algo_multi(105, 253))
     # print(algo_multi_recur(105, 253))
-    turtle_init()
-    flocon_koch(30, 300)
     pass
