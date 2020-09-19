@@ -8,18 +8,19 @@ import pygame
 import random as rdm
 
 
+def uptdate_screen() -> None:
+    pygame.display.flip()
+
+
 class Balle:
 
-    def __init__(self,
-                 screen,
-                 x: int,
-                 y: int,
-                 color: tuple) -> None:
-        self.x = x
-        self.y = y
-        self.color = color
+    def __init__(self, screen: pygame.Surface) -> None:
+        self.x = rdm.randint(0, screen.get_width())
+        self.y = rdm.randint(0, screen.get_height())
         self.screen = screen
-        self.radius = 34
+        self.color = None
+        self.change_color()
+        self.radius = 30
         self.go_up = False
         self.go_left = False
 
@@ -37,50 +38,116 @@ class Balle:
 
     def get_go_up(self) -> bool:
         return self.go_up
-    
+
     def get_go_left(self) -> bool:
         return self.go_left
 
     def get_screen(self) -> pygame.Surface:
         return self.screen
 
-    def get_image(self) -> pygame.Surface:
-        return self.image
-
-    def print_ball(self) -> None:
-        pygame.draw.circle(
+    def afficher(self) -> str:
+        return_val = "screen : {}\nCouleur : {}\n radius : {}\nx : {}" \
+            "\ny : {}\ngo_up : {}\ngo_left : {}".format(
                 self.get_screen(),
-                self.get_color(),
-                (
-                        self.get_x(),
-                        self.get_y()
-                    ),
-                3
+                self.get_radius(),
+                self.get_x(),
+                self.get_y(),
+                self.get_go_up(),
+                self.get_go_left()
+                )
+        return return_val
+
+    def give_random_color(self) -> tuple:
+        return (rdm.randint(0, 255), rdm.randint(0, 255), rdm.randint(0, 255))
+
+    def change_color(self) -> None:
+        self.color = self.give_random_color()
+
+    def display(self) -> None:
+        pygame.draw.circle(
+            self.get_screen(),
+            self.get_color(),
+            (self.get_x(), self.y),
+            30
             )
 
     def move(self) -> None:
-        
-        def f(self, x: int) -> int:
-            assert 0 < x < 1200, "x not valuable"
-            y = 4
-            print("x =", x, "f(x) =", y)
-            assert 0 < y < 650, "y not valueable"
-            return y
-        
-        value_x = self.get_x() + (3, -3)[self.get_go_left()]
-        value_y = f(self, value_x)
-        self.rebound(value_x, value_y)
-        self.x = value_x
-        self.y = value_y
+        self.x = self.get_x() + (1, -1)[self.get_go_left()]
+        self.y = self.get_y() + (1, -1)[self.get_go_up()]
+        self.rebound()
 
-    def rebound(self, new_x: int, new_y: int) -> None:
-        if new_y + self.get_radius() >= self.screen.get_height() \
-                or new_y <= 0:
-            self.go_up = not(self.get_go_up())
-        elif new_x + self.get_radius() >= self.screen.get_width() \
-                or new_x <= 0:
-            self.go_left = not(self.get_go_left())
-            print(self.get_go_left())
+    def rebound(self) -> None:
+        if self.get_y() >= self.screen.get_height():
+            self.go_up = True
+            self.change_color()
+
+        elif self.get_y() < 0:
+            self.go_up = False
+            self.change_color()
+
+        if self.get_x() >= self.screen.get_width():
+            self.go_left = True
+            self.change_color()
+
+        elif self.get_x() < 0:
+            self.go_left = False
+            self.change_color()
+
+    def set_coord(self, new_coord: tuple) -> None:
+        x, y = new_coord
+        self.x = x
+        self.y = y
+
+
+class Jeu:
+
+    def __init__(self, screen: pygame.Surface) -> None:
+        self.screen = screen
+        self.balles = []
+        self.run = True
+        self.add_balle()
+
+    def get_screen(self) -> pygame.Surface:
+        return self.screen
+
+    def get_balles(self, k: int = None) -> list or Balle:
+        if k is not None:
+            return_val = self.balles[k]
+        else:
+            return_val = self.balles
+        return return_val
+
+    def get_run(self) -> bool:
+        return self.run
+
+    def add_balle(self) -> None:
+        self.get_balles().append(Balle(self.get_screen()))
+
+    def remove_balle(self, k: int = 0) -> None:
+        self.get_balles().pop(k)
+
+
+    def move_and_display(self) -> None:
+        for balle in self.get_balles():
+            balle: Balle
+            balle.move()
+            balle.display()
+
+    def move(self) -> None:
+        for balle in self.get_balles():
+            balle: Balle
+            balle.move()
+
+    def display(self) -> None:
+        for balle in self.get_balles():
+            balle: Balle
+            balle.display()
+
+    def test(self):
+        self.get_balles(0).display()
+
+    def stop_while(self) -> None:
+        self.run = False
 
 
 # début de l'application:
@@ -91,27 +158,37 @@ pygame.display.set_caption("for Earth")
 format_screen = (1200, 650)
 screen = pygame.display.set_mode(format_screen)
 
-balle_1: Balle = Balle(screen, 203, 323, (0, 255, 255))
+game = Jeu(screen)
+balle1 = Balle(screen)
 
-run = True
-
-while run:
-    screen.fill((0, 0, 120))
-    balle_1.print_ball()
-    balle_1.move()
-    print(balle_1.get_color(), balle_1.get_color(), balle_1.get_x(), balle_1.get_y())
-    pygame.draw.circle(
-                screen,
-                balle_1.get_color(),
-                (
-                        balle_1.get_x(),
-                        balle_1.get_y()
-                    ),
-                3
-            )
+while game.get_run():
+    # display background
+    screen.fill((0, 0, 0))
+    # déplace et affiche les balles les balles
+    # game.move_and_display()
+    balle1.move()
+    balle1.display()
+    # mise à jour de l'écran
+    uptdate_screen()
+    # on balaye les evénement de la page
     for event in pygame.event.get():
+        # si la croix rouge
         if event.type == pygame.QUIT:
-            run = False
-        elif event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
-            run = False
+            # on arrète la boucle
+            game.stop_while()
+        # sinon si une est préssée et que c'est échap on arrète aussi la boucle
+        elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_ESCAPE:
+                game.stop_while()
+            elif event.key == pygame.K_RETURN:
+                game.add_balle()
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            if event.button == 1:
+                game.get_balles(
+                    rdm.randint(0, len(game.get_balles()))
+                    ).set_coord(event.pos)
+            elif event.button == 2 or 3:
+                game.add_balle()
+
+# on quitte la fenêtre
 pygame.quit()
