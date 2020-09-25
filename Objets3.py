@@ -166,7 +166,7 @@ balle1 = Balle(screen)
 
 while game.get_run():
     # display background
-    screen.fill((0, 0, 0))
+    screen.fill((100, 100, 100))
     # déplace et affiche les balles les balles
     game.move_and_display()
     # mise à jour de l'écran
