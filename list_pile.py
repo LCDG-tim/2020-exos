@@ -36,7 +36,7 @@ class ListPile2:
         self.lst
 
     def is_empty(self) -> None:
-        return bool(self.lst)
+        return not bool(self.lst)
 
     def empiler(self, val) -> None:
         self.lst.append(val)
@@ -80,19 +80,18 @@ class ListFile2:
         self.lst = []
 
     def get_lst(self) -> list:
-        self.lst
+        return self.lst
 
     def is_empty(self) -> None:
-        return bool(self.lst)
+        return not bool(self.lst)
 
     def ajout(self, val) -> None:
-        if not self.is_empty():
-            self.lst.append(val)
+        self.lst.append(val)
 
     def retire(self):
         return_val = None
         if not self.is_empty():
-            return_val = self.lst.pop(1)
+            return_val = self.lst.pop(0)
         return return_val
 
     def premier(self):

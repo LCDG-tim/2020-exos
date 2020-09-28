@@ -6,20 +6,43 @@ Created on Fri Sep 25 10:49:29 2020
 """
 
 
+class DuoDico:
+
+    def __init__(self, cle=None, val=None) -> None:
+        self.key = cle
+        self.value = val
+
+    def get_key(self):
+        return self.key
+
+    def get_value(self):
+        return self.value
+
+    def set_key(self, cle):
+        self.key = cle
+
+    def set_value(self, val):
+        self.value = val
+
+
 class Dico:
 
     def __init__(self) -> None:
+        self.dict = []
         self.lst = []
         self.cles = []
 
-    def get_lst(self) -> list:
+    def get_dicts(self) -> list:
+        return self.dict
+
+    def get_values(self) -> list:
         return self.lst
 
     def get_cles(self) -> list:
         return self.cles
 
     def is_empty(self) -> bool:
-        return bool(self.get_lst())
+        return not bool(self.get_lst())
 
     def get_taille(self) -> int:
         return len(self.get_lst())
@@ -39,8 +62,7 @@ class Dico:
         i = 0
         while cle != self.get_cles()[i] and i < len(self.get_cles()):
             i += 1
-        if cle != self.get_cles()[i] and i == len(self.get_cles()):
-            i = None
+        i = (i, None)[cle != self.get_cles()[i] and i == len(self.get_cles())]
         return i
 
     def suppr(self, cle) -> None:
@@ -52,7 +74,6 @@ class Dico:
         if not self.is_empty():
             return_val = self.get_lst()[self.cle_indix(cle)]
         return return_val
-
 
 
 if __name__ == "__main__":
