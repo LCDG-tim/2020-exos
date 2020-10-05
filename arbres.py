@@ -59,9 +59,10 @@ class ABR:
             return_val = 1 + self.hauteur(arbre.gauche)
 
         else:
-            hauteur_droit = self.hauteur(arbre.droit)
-            hauteur_gauche = self.hauteur(arbre.gauche)
-            return_val = 1 + max(hauteur_gauche, hauteur_droit)
+            return_val = 1 + max(
+                self.hauteur(arbre.droit),
+                self.hauteur(arbre.gauche)
+                )
 
         return return_val
 
