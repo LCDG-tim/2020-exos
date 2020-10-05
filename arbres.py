@@ -28,23 +28,44 @@ class ABR:
         if arbre is None:
             arbre = self
         if arbre.droit is None and arbre.gauche is None:
-            return_val = 0
+            return_val = 1
+
+        elif arbre.droit is None and arbre.gauche is not None:
+            return_val = 1 + self.taille(arbre.gauche)
+
+        elif arbre.droit is not None and arbre.gauche is None:
+            return_val = 1 + self.taille(arbre.droit)
+
         else:
             return_val = 1 + self.taille(arbre.gauche) \
                 + self.taille(arbre.droit)
+
         return return_val
 
-    def hauteur(self, arbre=None, i: int = 0) -> int:
+    def hauteur(self, arbre=None) -> int:
         if arbre is None:
             arbre = self
-        if arbre.droit is None and arbre.droit is None:
-            return_val = i
+
+        r_is_none = arbre.droit is None
+        l_is_none = arbre.gauche is None
+
+        if r_is_none and l_is_none:
+            return_val = 0
+
+        elif not r_is_none and l_is_none:
+            return_val = 1 + self.hauteur(arbre.droit)
+
+        elif not l_is_none and r_is_none:
+            return_val = 1 + self.hauteur(arbre.gauche)
+
         else:
-            return_val = self.hauteur(arbre.gauche, i) + \
-                self.hauteur(arbre.droite, i)
+            hauteur_droit = self.hauteur(arbre.droit)
+            hauteur_gauche = self.hauteur(arbre.gauche)
+            return_val = 1 + max(hauteur_gauche, hauteur_droit)
+
         return return_val
 
-    def afficher(self, arbre=None, string: str = None) -> str:
+    def afficher(self, arbre=None) -> str:
         if arbre is None:
             arbre = self
         if arbre.gauche is None and arbre.droit is None:
@@ -65,8 +86,11 @@ class ABR:
 
 if __name__ == "__main__":
     ex18 = ABR(32)
-    print(ex18.afficher())
     val = [27, 35, 63, 18, 30, 28, 31, 8, 17]
     for i in val:
         ex18.inserer(i)
+    print(" ".join(str(i) for i in [32] + val))
+    print("______________________\n")
     print(ex18.afficher())
+    print(ex18.taille())
+    print(ex18.hauteur())
