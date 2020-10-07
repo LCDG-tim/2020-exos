@@ -27,13 +27,17 @@ class ABR:
     def taille(self, arbre=None) -> int:
         if arbre is None:
             arbre = self
-        if arbre.droit is None and arbre.gauche is None:
+
+        r_is_none = arbre.droit is None
+        l_is_none = arbre.gauche is None
+
+        if r_is_none and l_is_none:
             return_val = 1
 
-        elif arbre.droit is None and arbre.gauche is not None:
+        elif r_is_none and not l_is_none:
             return_val = 1 + self.taille(arbre.gauche)
 
-        elif arbre.droit is not None and arbre.gauche is None:
+        elif not r_is_none and l_is_none:
             return_val = 1 + self.taille(arbre.droit)
 
         else:
@@ -41,6 +45,12 @@ class ABR:
                 + self.taille(arbre.droit)
 
         return return_val
+
+    def lengh(self) -> int:
+        arbre_gauche = self.gauche.lengh() if self.gauche else 0
+        arbre_droite = self.droit.lengh() if self.droit else 0
+
+        return 1 + arbre_gauche + arbre_droite
 
     def hauteur(self, arbre=None) -> int:
         if arbre is None:
@@ -66,16 +76,26 @@ class ABR:
 
         return return_val
 
+    def hight(self) -> int:
+        arbre_gauche = self.gauche.hight() if self.gauche else 0
+        arbre_droit = self.droit.hight() if self.droit else 0
+        return 1 + max(arbre_gauche, arbre_droit)
+
     def afficher(self, arbre=None) -> str:
+
         if arbre is None:
             arbre = self
-        if arbre.gauche is None and arbre.droit is None:
+
+        r_is_none = arbre.droit is None
+        l_is_none = arbre.gauche is None
+
+        if r_is_none and l_is_none:
             return_val = str(arbre.valeur)
 
-        elif arbre.gauche is None and arbre.droit is not None:
+        elif l_is_none and not r_is_none:
             return_val = str(arbre.valeur) + " " + self.afficher(arbre.droit)
 
-        elif arbre.droit is None and arbre.gauche is not None:
+        elif r_is_none and not l_is_none:
             return_val = str(arbre.valeur) + " " + self.afficher(arbre.gauche)
 
         else:
@@ -94,4 +114,6 @@ if __name__ == "__main__":
     print("______________________\n")
     print(ex18.afficher())
     print(ex18.taille())
+    print(ex18.lengh())
     print(ex18.hauteur())
+    print(ex18.hight())
