@@ -10,7 +10,6 @@ import random as rdm
 
 
 import turtle
-import math
 
 
 base16 = ["1", "2", "3", "4", "5", "6", "7", "8", "9",
@@ -142,11 +141,12 @@ class Element:
 
     def __init__(self, largeur: int = 30, hauteur: int = 30,
                  couleur_bordure: str = "black",
-                 couleur_interieur: str = "white") -> None:
+                 couleur_interieur: str = "white", pos: tuple = ()) -> None:
         self.largeur = largeur
         self.hauteur = hauteur
         self.couleur_bordure = couleur_bordure
         self.couleur_interieur = couleur_interieur
+        self.pos = pos
 
     def get_largeur(self) -> int:
         return self.largeur
@@ -160,6 +160,8 @@ class Element:
     def get_couleur_interieur(self) -> str:
         return self.couleur_interieur
 
+    def get_pos(self):
+        return self.pos
 
 
 class Fenetre(Element):
@@ -186,12 +188,25 @@ class Fenetre(Element):
 
 class Balcon(Element):
     def __init__(self, pos: int, pos_etage: tuple) -> None:
-        super().__init__(35, 40)
-        self.pos = pos
-        self.pos_etages = pos_etage
+        super().__init__(40, 25)
+        self.posb = pos
+        self.pos = pos_etage
 
     def afficher(self) -> None:
-        go_to()
+        turtle.width(3)
+        go_to(self.pos[0] + 10 + (self.posb - 1) * 40, self.pos[1])
+        rect(self.get_largeur(), self.get_hauteur())
+        for i in range(int(self.largeur / 2) // 5):
+            turtle.fd(5)
+            turtle.lt(90)
+            turtle.fd(self.get_hauteur())
+            turtle.rt(90)
+            turtle.fd(5)
+            turtle.rt(90)
+            turtle.fd(self.get_hauteur())
+            turtle.lt(90)
+        turtle.width(1)
+        go_to(self.pos[0], self.pos[1])
 
 
 class PorteFenetre(Element):
@@ -211,6 +226,7 @@ class PorteFenetre(Element):
         else:
             go_to(self.pos2_x, self.pos2_y)
         rect(self.get_largeur(), self.get_hauteur())
+        Balcon(self.pos, (self.posx, self.posy)).afficher()
         go_to(self.pos2_x, self.pos2_y)
 
 
@@ -242,18 +258,39 @@ class PorteEntre(Element):
         go_to(self.posxb, self.posy)
 
 
+class ToitPlat(Element):
+
+    def __init__(self, pos_etage: tuple) -> None:
+        super().__init__(140, 1, "black", "black")
+        self.pos = pos_etage
+
+    def afficher(self) -> None:
+        turtle.width(6)
+        turtle.goto(self.pos[0] + self.largeur, self.pos[1])
+        turtle.width(1)
+
+class ToitPointu(Element):
+    def __init__(self, pos_etage: tuple) -> None:
+        super().__init__(150, 30, "black", "black", pos_etage)
+
+    def afficher(self) -> None:
+        go_to(self.pos[0] - 10, self.pos[1])
+        start_a_filling(self.couleur_interieur, self.couleur_bordure)
+        turtle.goto(self.pos[0] + self.largeur, self.pos[1])
+        turtle.goto(self.pos[0] + self.largeur, self.pos[1])
+        turtle.goto(self.pos[0] + self.largeur / 2, self.pos[1] + self.hauteur)
+        turtle.end_fill()
+        go_to(self.pos[0], self.pos[1])
+
 
 class Etage(Element):
 
     def __init__(self, couleur: str) -> None:
         super().__init__(140, 60, "black", couleur)
         self.pos = (get_x_turtle(), get_y_turtle())
-        print(self.pos)
-        self.elts = [(Fenetre(i, self.pos), PorteFenetre(i, self.pos))[rdm.randint(0, 1)]
+        self.elts = [(Fenetre(i, self.pos), PorteFenetre(i, self.pos))
+                     [rdm.randint(0, 1)]
                      for i in range(1, 4)]
-
-    def get_couleur(self) -> str:
-        return self.couleur
 
     def get_longeur(self) -> int:
         return self.longeur
@@ -279,7 +316,6 @@ class RezDeChaussee(Etage):
         self.pos = (get_x_turtle(), get_y_turtle())
         self.pos_win = [1, 2, 3]
         self.pos_win.remove(self.pos_porte)
-        print(self.pos_porte, self.pos_win)
 
     def afficher(self) -> None:
         rect(self.largeur, self.hauteur, self.get_couleur_interieur())
@@ -290,21 +326,30 @@ class RezDeChaussee(Etage):
 
 class Immeubles(Element):
 
-    def __init__(self, couleur: str, etages: int) -> None:
+    def __init__(self, couleur: str = get_random_color(),
+                 etages: int = rdm.randint(0, 4)) -> None:
         super().__init__(140, (etages + 1) * 60, couleur_interieur=couleur)
         self.etages = etages
+        self.pos = (get_x_turtle(), get_y_turtle())
 
     def afficher(self) -> None:
         RezDeChaussee(self.get_couleur_interieur()).afficher()
         for i in range(self.etages):
             Etage(self.get_couleur_interieur()).afficher()
+        if rdm.randint(0, 1):
+            ToitPlat((get_x_turtle(), get_y_turtle())).afficher()
+        else:
+            ToitPointu((get_x_turtle(), get_y_turtle())).afficher()
+        go_to(self.pos[0] + 180, self.pos[1])
 
 
 if __name__ == "__main__":
-    immeuble1 = Immeubles(get_random_color(),
-                          rdm.randint(0, 4))
     turtle.speed(0)
-    immeuble1.afficher()
-    go_to(-130, 0)
-    turtle.goto(-130, 0)
+    go_to(-370, -103)
+    turtle.width(6)
+    turtle.fd(730)
+    turtle.width(1)
+    go_to(-350, -100)
+    for i in range(4):
+        Immeubles(get_random_color(), rdm.randint(0, 4)).afficher()
     turtle.done()
