@@ -6,87 +6,6 @@ Created on Tue Nov 17 15:02:39 2020
 """
 
 
-class ABR:
-    """Arbre lambda"""
-    def __init__(self, val) -> None:
-        self.valeur = val
-        self.gauche = None
-        self.droite = None
-
-    def inserer(self, valeur) -> None:
-        """
-
-
-        Parameters
-        ----------
-        valeur : TYPE
-            DESCRIPTION.
-
-        Returns
-        -------
-        None
-            DESCRIPTION.
-
-        """
-
-        if valeur < self.valeur:
-            if self.gauche is not None:# si il y a un noeud à gauche
-                self.gauche.inserer(valeur)
-            else:
-                self.gauche = ABR(valeur)
-        else:
-            if self.droite is not None:
-                self.droite.inserer(valeur)
-            else:
-                self.droite = ABR(valeur)
-
-    def affiche(self) -> None:
-        """permet d'afficher un arbre"""
-        if self is None: # si l'arbre est vide
-            return None
-        else:
-            return [self.valeur,
-                    ABR.affiche(self.gauche),
-                    ABR.affiche(self.droite)]
-
-    def taille(self) -> None:
-        """donne la taille d'un arbre cad le nombre de feuilles """
-        if self is None:
-            return 0
-        else:
-            return 1 + ABR.taille(self.gauche) + ABR.taille(self.droite)
-
-    def hauteur(self) -> None:
-        """
-
-
-        Returns
-        -------
-        None
-            DESCRIPTION.
-
-        """
-
-        if self is None:
-            return 0
-        elif self.gauche is None and self.droite is None:
-            return 0
-        else:
-            return 1 + max(ABR.hauteur(self.gauche), ABR.hauteur(self.droite))
-
-    def get_valeur(self):
-        """
-
-
-        Returns
-        -------
-        TYPE
-            DESCRIPTION.
-
-        """
-
-        return self.valeur
-
 class ArbreBinaire:
     """Arbre binaire"""
     def __init__(self, val) -> None:
@@ -286,6 +205,14 @@ class File:
         self.tete = None
         self.queue = None
 
+    def get_dernier_elt(self) -> Element:
+        elt = None
+        if not self.file_vide():
+            elt = self.tete
+            while elt.suivant is not None:
+                elt = elt.suivant
+        return elt
+
     def enfile(self, valeur) -> None:
         """
 
@@ -313,6 +240,7 @@ class File:
             # elt
             # avec suivant
             self.queue = elt # on redéfinit self.queue par e.
+        self.queue = self.get_dernier_elt()
 
     def file_vide(self) -> bool:
         """
@@ -350,6 +278,21 @@ class File:
         def __str__(self):
             return str(self.tete)
 
+
+def BFT(arbre):
+    f=File()
+    f.enfile(arbre)
+    l=[]
+    while not f.file_vide():
+        a=f.defile()
+        l.append(a.valeur)
+        if a.gauche!=None:
+            f.enfile(a.gauche)
+        if a.droite!=None:
+            f.enfile(a.droite)
+    return l
+
+
 if __name__ == "__main__":
     A = ArbreBinaire(8)
     A.inserer_gauche(9)
@@ -377,3 +320,4 @@ if __name__ == "__main__":
     parcours_prefixe(A)
     print("\n")
     parcours_suffixe(A)
+    print("\n", BFT(A))
