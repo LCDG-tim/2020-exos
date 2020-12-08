@@ -23,7 +23,7 @@ class Matrice:
         return ('\t{\n' +
                 "\n".join((" ".join([str(j).center(4) for j in i]))
                           .center(len(self.table[0]) * 2 + len(self.table[0]))
-        for i in self.table) + '\n}')
+        for i in self.table) + '\n}\n')
 
 
 class Graph:
@@ -50,28 +50,314 @@ class Sommet:
 def algo_dijska(A: Graph, ligne: int, arrivee = 0) -> list:
     nb_pts = len(A.matrice.table)
     tabl = [None] * nb_pts
-    vals = [None] * nb_pts
-    tabl[ligne] = 0
-    lignes_faites = list(range(nb_pts))
-    lignes_faites.remove(ligne)
-    run = True
-    j = 0
-    while run:
-        print(j, tabl, vals)
-        for i in lignes_faites:
-            if A.matrice.table[j][i] != 0:
-                vals.append(A.matrice.table[j][i])
-                if tabl[i] is None:
-                    tabl[i] = A.matrice.table[0][i]
-                elif tabl[i] > A.matrice.table[j][i]:
-                    tabl[i] = A.matrice.table[j][i]
-        j = vals.index(min(vals))
-        vals[j] = -1
-        run = None in tabl
+    tabl[ligne] = (0, 0)
+    distance = 0
+    colonne_lock = []
+
+    j = ligne
+    colonne_lock.append(j)
+    for i in range(nb_pts):
+        # print(i, j, A.matrice.table[j][i], tabl)
+        distance = tabl[j][0]
+        if A.matrice.table[j][i] != 0:
+
+            new_distance = distance + A.matrice.table[j][i]
+            if tabl[i] is None:
+                tabl[i] = (A.matrice.table[0][i], j)
+
+            elif tabl[i][0] > new_distance:
+                tabl[i] = (new_distance, j)
+
+    tabl_min = [tabl[i]
+                for i in range(len(tabl))
+                if i not in colonne_lock if i is not None]
+    print("\n" + str(tabl_min) + "\n", colonne_lock)
+
+    min_distance = tabl_min[0]
+
+    for i in tabl_min:
+        i: tuple
+        if i is not None:
+
+            if i[0] < min_distance[0]:
+                min_distance = i
+    print(min_distance)
+    j = tabl.index(min_distance)
+    colonne_lock.append(j)
+    distance = min_distance[0]
+
+    for i in range(nb_pts):
+        # print(i, j, A.matrice.table[j][i], tabl)
+        if A.matrice.table[j][i] != 0:
+
+            new_distance = distance + A.matrice.table[j][i]
+            if tabl[i] is None:
+                tabl[i] = (new_distance, j)
+
+            elif tabl[i][0] > new_distance:
+                tabl[i] = (new_distance, j)
+
+    tabl_min = [tabl[i]
+                for i in range(len(tabl))
+                if i not in colonne_lock]
+    print("\n" + str(tabl_min) + "\n", colonne_lock)
+
+    min_distance = tabl_min[0]
+    for i in tabl_min:
+        i: tuple
+        if i is not None:
+
+            if i[0] < min_distance[0]:
+                min_distance = i
+    print(min_distance)
+    j = tabl.index(min_distance)
+    colonne_lock.append(j)
+    distance = min_distance[0]
+
+    for i in range(nb_pts):
+        # print(i, j, A.matrice.table[j][i], tabl)
+        if A.matrice.table[j][i] != 0:
+
+            new_distance = distance + A.matrice.table[j][i]
+            if tabl[i] is None:
+                tabl[i] = (new_distance, j)
+
+            elif tabl[i][0] > new_distance:
+                tabl[i] = (new_distance, j)
+
+    tabl_min = [tabl[i]
+                for i in range(len(tabl))
+                if i not in colonne_lock]
+    print("\n" + str(tabl_min) + "\n", colonne_lock)
+
+    min_distance = tabl_min[0]
+    for i in tabl_min:
+        i: tuple
+        if i is not None:
+
+            if i[0] < min_distance[0]:
+                min_distance = i
+    print(min_distance)
+    j = tabl.index(min_distance)
+    colonne_lock.append(j)
+    distance = min_distance[0]
+
+    for i in range(nb_pts):
+        # print(i, j, A.matrice.table[j][i], tabl)
+        if A.matrice.table[j][i] != 0:
+
+            new_distance = distance + A.matrice.table[j][i]
+            if tabl[i] is None:
+                tabl[i] = (new_distance, j)
+
+            elif tabl[i][0] > new_distance:
+                tabl[i] = (new_distance, j)
+
+    tabl_min = [tabl[i]
+                for i in range(len(tabl))
+                if i not in colonne_lock]
+    print("\n" + str(tabl_min) + "\n", colonne_lock)
+
+
+    min_distance = tabl_min[0]
+    for i in tabl_min:
+        i: tuple
+        if i is not None:
+
+            if i[0] < min_distance[0]:
+                min_distance = i
+    print(min_distance)
+    j = tabl.index(min_distance)
+    colonne_lock.append(j)
+    distance = min_distance[0]
+
+    for i in range(nb_pts):
+        # print(i, j, A.matrice.table[j][i], tabl)
+        if A.matrice.table[j][i] != 0:
+
+            new_distance = distance + A.matrice.table[j][i]
+            if tabl[i] is None:
+                tabl[i] = (new_distance, j)
+
+            elif tabl[i][0] > new_distance:
+                tabl[i] = (new_distance, j)
+
+    tabl_min = [tabl[i]
+                for i in range(len(tabl))
+                if i not in colonne_lock]
+    print("\n" + str(tabl_min) + "\n", colonne_lock)
+
+
+    tabl_min = [tabl[i]
+                for i in range(len(tabl))
+                if i not in colonne_lock]
+    print("\n" + str(tabl_min) + "\n", colonne_lock)
+
+    min_distance = tabl_min[0]
+    for i in tabl_min:
+        i: tuple
+        if i is not None:
+
+            if i[0] < min_distance[0]:
+                min_distance = i
+    print(min_distance)
+    j = tabl.index(min_distance)
+    colonne_lock.append(j)
+    distance = min_distance[0]
+
+    for i in range(nb_pts):
+        # print(i, j, A.matrice.table[j][i], tabl)
+        if A.matrice.table[j][i] != 0:
+
+            new_distance = distance + A.matrice.table[j][i]
+            if tabl[i] is None:
+                tabl[i] = (new_distance, j)
+
+            elif tabl[i][0] > new_distance:
+                tabl[i] = (new_distance, j)
+
+    tabl_min = [tabl[i]
+                for i in range(len(tabl))
+                if i not in colonne_lock]
+    print("\n" + str(tabl_min) + "\n", colonne_lock)
+
+    min_distance = tabl_min[0]
+    for i in tabl_min:
+        i: tuple
+        if i is not None:
+
+            if i[0] < min_distance[0]:
+                min_distance = i
+    print(min_distance)
+    j = tabl.index(min_distance)
+    colonne_lock.append(j)
+    distance = min_distance[0]
+
+    for i in range(nb_pts):
+        # print(i, j, A.matrice.table[j][i], tabl)
+        if A.matrice.table[j][i] != 0:
+
+            new_distance = distance + A.matrice.table[j][i]
+            if tabl[i] is None:
+                tabl[i] = (new_distance, j)
+
+            elif tabl[i][0] > new_distance:
+                tabl[i] = (new_distance, j)
+
+    tabl_min = [tabl[i]
+                for i in range(len(tabl))
+                if i not in colonne_lock]
+    print("\n" + str(tabl_min) + "\n", colonne_lock)
+
+    min_distance = tabl_min[0]
+    for i in tabl_min:
+        i: tuple
+        if i is not None:
+
+            if i[0] < min_distance[0]:
+                min_distance = i
+    print(min_distance)
+    j = tabl.index(min_distance)
+    colonne_lock.append(j)
+    distance = min_distance[0]
+
+    for i in range(nb_pts):
+        # print(i, j, A.matrice.table[j][i], tabl)
+        if A.matrice.table[j][i] != 0:
+
+            new_distance = distance + A.matrice.table[j][i]
+            if tabl[i] is None:
+                tabl[i] = (new_distance, j)
+
+            elif tabl[i][0] > new_distance:
+                tabl[i] = (new_distance, j)
+
+    tabl_min = [tabl[i]
+                for i in range(len(tabl))
+                if i not in colonne_lock]
+    print("\n" + str(tabl_min) + "\n", colonne_lock)
+
+    min_distance = tabl_min[0]
+    for i in tabl_min:
+        i: tuple
+        if i is not None:
+
+            if i[0] < min_distance[0]:
+                min_distance = i
+    print(min_distance)
+    j = tabl.index(min_distance)
+    colonne_lock.append(j)
+    distance = min_distance[0]
+
+    for i in range(nb_pts):
+        # print(i, j, A.matrice.table[j][i], tabl)
+        if A.matrice.table[j][i] != 0:
+
+            new_distance = distance + A.matrice.table[j][i]
+            if tabl[i] is None:
+                tabl[i] = (new_distance, j)
+
+            elif tabl[i][0] > new_distance:
+                tabl[i] = (new_distance, j)
+
+    tabl_min = [tabl[i]
+                for i in range(len(tabl))
+                if i not in colonne_lock]
+    print("\n" + str(tabl_min) + "\n", colonne_lock)
+
+    min_distance = tabl_min[0]
+    for i in tabl_min:
+        i: tuple
+        if i is not None:
+
+            if i[0] < min_distance[0]:
+                min_distance = i
+    print(min_distance)
+    j = tabl.index(min_distance)
+    colonne_lock.append(j)
+    distance = min_distance[0]
+
+    for i in range(nb_pts):
+        # print(i, j, A.matrice.table[j][i], tabl)
+        if A.matrice.table[j][i] != 0:
+
+            new_distance = distance + A.matrice.table[j][i]
+            if tabl[i] is None:
+                tabl[i] = (new_distance, j)
+
+            elif tabl[i][0] > new_distance:
+                tabl[i] = (new_distance, j)
+
+    tabl_min = [tabl[i]
+                for i in range(len(tabl))
+                if i not in colonne_lock]
+    print("\n" + str(tabl_min) + "\n", colonne_lock)
+
+    min_distance = tabl_min[0]
+    for i in tabl_min:
+        i: tuple
+        if i is not None:
+
+            if i[0] < min_distance[0]:
+                min_distance = i
+    print(min_distance)
+    j = tabl.index(min_distance)
+    colonne_lock.append(j)
+    distance = min_distance[0]
+
+    for i in range(nb_pts):
+        # print(i, j, A.matrice.table[j][i], tabl)
+        if A.matrice.table[j][i] != 0:
+
+            new_distance = distance + A.matrice.table[j][i]
+            if tabl[i] is None:
+                tabl[i] = (new_distance, j)
+
+            elif tabl[i][0] > new_distance:
+                tabl[i] = (new_distance, j)
+
+    print(colonne_lock)
     return tabl
-
-
-
 
 
 if __name__ == "__main__":
@@ -91,4 +377,4 @@ if __name__ == "__main__":
         ))
     )
     print(a)
-    print(algo_dijska(a, 0))
+    print("\n", algo_dijska(a, 0), sep="\n")

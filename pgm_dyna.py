@@ -5,6 +5,8 @@ Created on Thu Dec  3 09:07:49 2020
 @author: timot
 """
 
+import math
+
 
 def fact(n):
     if n == 0:
@@ -67,6 +69,6 @@ def rendu_monnaie_mem_c(P,X,m):
                     m[X] = mini
     return mini
 
-pieces = (2,5,10,50,100
+pieces = (2,5,10,50,100)
 if __name__ == "__main__":
     print(fact(5))
