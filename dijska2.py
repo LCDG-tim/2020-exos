@@ -12,9 +12,12 @@ from algo_dilsjtega import Graph, Matrice
 def bind(n : int) -> str:
     return chr(65 + n)
 
+def debind(n: str) -> int:
+    return ord(n) - 65
+
 
 def algo_dijska(A: Graph, ligne: int, arrivee = "K") -> tuple:
-    ligne = ord(ligne) - 65
+    ligne = debind(ligne)
     nb_pts = len(A.matrice.table)
     tabl = [None] * nb_pts
     tabl[ligne] = (0, 0)
