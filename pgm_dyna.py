@@ -49,6 +49,8 @@ def glouton(n):
             nb_de_piece += [pieces[i]] * nb
         i += 1
     return nb_de_piece
+
+
 def rendu_monnaie_mem(P,X):
     mem = [0]*(X+1)
     return rendu_monnaie_mem_c(P,X,mem)
