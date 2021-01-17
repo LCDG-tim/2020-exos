@@ -5,11 +5,18 @@ Created on Thu Jan 14 09:24:35 2021.
 @author: Lebobe Timothe and Nicotte Loann
 """
 
+
+import re
+
+
 import tkinter as tk
 import random as rdm
 
 
-def get_eleves() -> dict:
+from list_pile import ListFile
+
+
+def get_eleves(path: str = "NSI_eleves.csv") -> dict:
     """
     Read csv.
 
@@ -20,11 +27,11 @@ def get_eleves() -> dict:
 
     """
     return_val = {}
-    with open("passage_eleve.txt", "r") as f:
+    with open(path, "r") as f:
         for i in f.readlines()[1:]:
             i: str
             i = i.strip().split(";")
-            key, val = tuple(i[1:3]), i[3]
+            key, val = tuple(i[:2]), i[2]
             return_val[key] = int(val)
 
     return return_val
@@ -45,10 +52,10 @@ def save(dct: dict) -> None:
         DESCRIPTION.
 
     """
-    with open("passage_eleve.txt", "w") as f:
-        f.write("classe;nom;prenom;passages\n")
+    with open("passage_eleve.csv", "w") as f:
+        f.write("nom;prenom;passages;\n")
         for key, val in dct.items():
-            f.write("{};{};{};{};\n".format("TCurie", key[0], key[1], val))
+            f.write("{};{};{};\n".format(key[0], key[1], val))
 
 
 
@@ -75,10 +82,15 @@ class App:
         """
         self.dict = dct
         self.window = tk.Tk()
+        self.window.title("Interrogation Arbitraire")
         self.window.geometry("600x300+300+250")
         self.window.maxsize(self.window.winfo_screenwidth(),
                        self.window.winfo_screenheight())
         self.window.minsize(600, 300)
+
+        self.auto_save = True
+        self.omaster, self.switch_button = [None] * 2
+        self.tirages = ListFile()
 
         bg = "#777777"
         font = (None, 20)
@@ -104,7 +116,7 @@ class App:
         tk.Button(but_frame,
                   text="Enregistrer",
                   font=font,
-                  command=self.save).grid(row=0,
+                  command=self.call_save).grid(row=0,
                                           column=1,
                                           sticky=tk.W,
                                           padx=10)
@@ -159,7 +171,16 @@ class App:
 
             prob[key] = val
         eleve_lst = [key for key, val in prob.items() for i in range(val)]
-        self.result["text"]= "Résultat : " + " ".join(rdm.choice(eleve_lst))
+        eleve = " ".join(rdm.choice(eleve_lst))
+        self.result["text"]= "Résultat : " + eleve
+        if len(self.tirages) <= 10:
+            self.tirages.add(eleve)
+            self.tirages.delete_start()
+        else:
+            self.tirages.add(eleve)
+
+        if self.auto_save:
+            self.save()
 
 
     def save(self) -> None:
@@ -172,20 +193,36 @@ class App:
             DESCRIPTION.
 
         """
-        eleve = tuple(self.result["text"].split(" ")[2:5])
-        self.dict[eleve] += 1
-        save(self.dict)
+        if re.findall("^Résultat : \\w+ \\w+$", self.result["text"]):
+            eleve = tuple(self.result["text"].split(" ")[2:5])
+            self.dict[eleve] += 1
+            save(self.dict)
+        else:
+            tk.messagebox.showerror("Enregistrement", "L'enregistrement est"
+                                    "impossible car aucun tirage n'a été "
+                                    "fait.")
+
+    def call_save(self)-> None:
+        """
+        Call save.
+
+        Returns
+        -------
+        None.
+
+        """
+        if self.auto_save:
+            tk.messagebox.showinfo("Enregistrer", "Ce résultat a déja été "
+                                   "enregistré si vous voulez désactiver "
+                                   "l'enregistrement automatique aller dans"
+                                   " Option>Enregistrement auto. ",
+                                   parent=self.window)
+        else:
+            self.save()
 
     def options(self) -> None:
         """
         Options.
-
-        Parameters
-        ----------
-        *args : TYPE
-            DESCRIPTION.
-        **kwargs : TYPE
-            DESCRIPTION.
 
         Returns
         -------
@@ -193,23 +230,93 @@ class App:
 
         """
         owindow = tk.Tk()
+        owindow.title('Options')
         owindow.geometry("600x300+300+250")
         owindow.maxsize(owindow.winfo_screenwidth(),
-                       owindow.winfo_screenheight())
+                        owindow.winfo_screenheight())
         owindow.minsize(600, 300)
 
-        omaster = tk.Frame()
+        bg = "#777777"
 
-        switch_button = tk.Button(omaster,
-                                  text)
-
-        pass
+        owindow.config(bg=bg)
 
 
+        omaster = tk.Frame(owindow, bg=bg)
 
-e = {("PARS", "Théo"): 0, ("PARS", "Patrick"): 0,
-     ("PARS", "Albert"): 0, ("PARS", "Camus"): 0}
+        tk.Label(omaster, text="Options", bg=bg)
 
-save(e)
+        self.switch_button = tk.Button(omaster,
+                                  text="Enregistrement auto. : {}"
+                                  .format(("Désactivé",
+                                           "Activé")[self.auto_save]),
+                                  command=self.switch,
+                                  font=(None, 20))
+        self.switch_button.pack(expand=True)
 
-App(e)
+        buth = tk.Button(omaster,
+                         text="Historique des tirages",
+                         font=(None, 20),
+                         command=self.history)
+        buth.pack(expand=True)
+
+        omaster.pack(expand=True)
+
+        owindow.mainloop()
+
+    def history(self) -> None:
+        """
+        History.
+
+        Returns
+        -------
+        None.
+
+        """
+        win = tk.Tk()
+        win.title("historique")
+        win.geometry("500x500+400+50")
+        win.config(bg="#777777")
+        hmaster = tk.Frame(win, bg="#777777")
+        print(len(self.tirages))
+        if len(self.tirages):
+            for i in range(len(self.tirages)):
+                tk.Label(hmaster,
+                         text=self.tirages.get_maillon_indice(i),
+                         bg="#777777",
+                         font=(None, 20)).pack(expand=True)
+        else:
+            tk.Label(hmaster,
+                     text="pas de tirages",
+                     bg="#777777",
+                     font=(None, 30)).pack(expand=True)
+            tk.Label(hmaster,
+                     text="enrgistrés sur cette session",
+                     bg="#777777",
+                     font=(None, 30)).pack(expand=True)
+        hmaster.pack(expand=True)
+
+    def switch(self) -> None:
+        """
+        Switch.
+
+        Returns
+        -------
+        None.
+
+        """
+        self.auto_save = not self.auto_save
+        self.switch_button["text"] = "Enregistrement auto. : {}" \
+                                      .format(("Désactivé",
+                                               "Activé")[self.auto_save])
+
+
+NSI = {("LEBOBE", "Timothé"): 0, ("NICOTTE", "Loann"): 0,
+     ("BAILLET", "Maxime"): 0, ("OUDIN", "Clement"): 0,
+     ("JONQUET", "Logan"): 0, ("ROYER", "Lucas"): 0, ("ARNOUD", "Florian"): 0,
+     ("POLYCARPE", "Guillaume"): 0, ("MAGINOT", "Louen"): 0,
+     ("DUPONT", "Alexis"): 0, ("LE MANS", "Léo"): 0,
+     ("PERRETANT", "Mallory"): 0, ("GIRAULT", "Lucas"): 0,
+     ("LOGEROT", "Alexis"): 0, ("TETVUIDE", "Yanis"): 0,
+     }
+
+App(get_eleves())

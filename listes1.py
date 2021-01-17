@@ -52,6 +52,9 @@ class ListC:
                 m = m.suiv
         return n
 
+    def __len__(self) -> None:
+        return self.get_lengh()
+
     def get_last_chaine(self) -> Maillon:
         """O (n)"""
         m = None

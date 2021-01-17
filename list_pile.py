@@ -62,8 +62,12 @@ class ListFile(ListC):
     def __init__(self) -> None:
         super().__init__()
 
-    def add(self, new) -> Maillon:
-        self.add_end(new)
+    def add(self, new: Maillon) -> None:
+        if isinstance(new, Maillon):
+            self.add_end(new)
+        else:
+            self.add_end(Maillon(new))
+
 
     def retire(self) -> Maillon:
         return_val = self.get_tete().get_val()

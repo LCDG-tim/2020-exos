@@ -1,5 +1,0 @@
-classe;nom;prenom;passages
-TCurie;PARS;Théo;0;
-TCurie;PARS;Patrick;0;
-TCurie;PARS;Albert;0;
-TCurie;PARS;Camus;0;
