@@ -6,14 +6,11 @@ Created on Thu Jan 14 09:24:35 2021.
 """
 
 
-import re
-
-
 import tkinter as tk
 import random as rdm
 
 
-from list_pile import ListFile
+from list_pile import ListFile, Maillon
 
 
 def get_eleves(path: str = "NSI_eleves.csv") -> dict:
@@ -37,7 +34,7 @@ def get_eleves(path: str = "NSI_eleves.csv") -> dict:
     return return_val
 
 
-def save(dct: dict) -> None:
+def save(dct: dict = get_eleves(), path: str = "NSI_eleves.csv") -> None:
     """
     Save a csv.
 
@@ -52,7 +49,7 @@ def save(dct: dict) -> None:
         DESCRIPTION.
 
     """
-    with open("passage_eleve.csv", "w") as f:
+    with open(path, "w") as f:
         f.write("nom;prenom;passages;\n")
         for key, val in dct.items():
             f.write("{};{};{};\n".format(key[0], key[1], val))
@@ -91,6 +88,8 @@ class App:
         self.auto_save = True
         self.omaster, self.switch_button = [None] * 2
         self.tirages = ListFile()
+        self.tirages.add(None)
+        self.eleve_sel = None
 
         bg = "#777777"
         font = (None, 20)
@@ -171,13 +170,16 @@ class App:
 
             prob[key] = val
         eleve_lst = [key for key, val in prob.items() for i in range(val)]
-        eleve = " ".join(rdm.choice(eleve_lst))
+        self.eleve_sel = rdm.choice(eleve_lst)
+        eleve = " ".join(self.eleve_sel)
         self.result["text"]= "Résultat : " + eleve
+        # print(len(self.tirages))
         if len(self.tirages) <= 10:
             self.tirages.add(eleve)
-            self.tirages.delete_start()
+            # print(self.tirages.get_tete())
         else:
             self.tirages.add(eleve)
+            self.tirages.delete_start()
 
         if self.auto_save:
             self.save()
@@ -193,12 +195,11 @@ class App:
             DESCRIPTION.
 
         """
-        if re.findall("^Résultat : \\w+ \\w+$", self.result["text"]):
-            eleve = tuple(self.result["text"].split(" ")[2:5])
-            self.dict[eleve] += 1
+        if self.eleve_sel is not None:
+            self.dict[self.eleve_sel] += 1
             save(self.dict)
         else:
-            tk.messagebox.showerror("Enregistrement", "L'enregistrement est"
+            tk.messagebox.showerror("Enregistrement", "L'enregistrement est "
                                     "impossible car aucun tirage n'a été "
                                     "fait.")
 
@@ -277,11 +278,10 @@ class App:
         win.geometry("500x500+400+50")
         win.config(bg="#777777")
         hmaster = tk.Frame(win, bg="#777777")
-        print(len(self.tirages))
         if len(self.tirages):
             for i in range(len(self.tirages)):
                 tk.Label(hmaster,
-                         text=self.tirages.get_maillon_indice(i),
+                         text=self.tirages.get_maillon_indice(i).get_val(),
                          bg="#777777",
                          font=(None, 20)).pack(expand=True)
         else:

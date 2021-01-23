@@ -24,6 +24,7 @@ class ListPile(ListC):
         return return_val
 
     def sommet(self) -> Maillon:
+        print(self.tete)
         return self.get_tete().get_val()
 
 
@@ -78,10 +79,11 @@ class ListFile(ListC):
         string = "["
         if not self.is_empty():
             m = self.tete
-            n = 1
+            string += "{}, ".format(m.get_val())
             while m.suiv is not None:
                 string += "{}, ".format(m.get_val())
                 m = m.suiv
+        string += "]"
         return string
 
     def premier(self) -> Maillon:

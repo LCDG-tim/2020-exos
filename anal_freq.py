@@ -1,6 +1,6 @@
  # -*- coding: utf-8 -*-
 """
-Created on Tue Dec  8 15:16:21 2020
+Created on Tue Dec  8 15:16:21 2020.
 
 @author: timot
 analyse fréquentielle alphabet
@@ -71,12 +71,51 @@ FREQ_FRANCAIS2 = {
 
 
 def plus_proche(val1: float, val2: float, val_cible: float) -> float:
-    return ((val1, abs(val1 - val_cible)), (val2, abs(val2 - val_cible)))[abs(val1 - val_cible) > abs(val2 - val_cible)]
+    """
+    Plus proche.
+
+    Parameters
+    ----------
+    val1 : float
+        DESCRIPTION.
+    val2 : float
+        DESCRIPTION.
+    val_cible : float
+        DESCRIPTION.
+
+    Returns
+    -------
+    float
+        DESCRIPTION.
+
+    """
+    return ((val1, abs(val1 - val_cible)),
+            (val2, abs(val2 - val_cible)))[abs(val1 - val_cible) >
+                                           abs(val2 - val_cible)]
 
 
 
 class Texte:
+    """A simple text.
+
+    A other line because kite want it
+    """
+
     def __init__(self, text: str) -> None:
+        """
+        Builder.
+
+        Parameters
+        ----------
+        text : str
+            DESCRIPTION.
+
+        Returns
+        -------
+        None
+            DESCRIPTION.
+
+        """
         self.text = text
         self.freq = {}
         self.nb_carract = 0
@@ -86,6 +125,15 @@ class Texte:
         self.associer(FREQ_FRANCAIS)
 
     def compteur(self) -> dict:
+        """
+        Documentation is a documentation.
+
+        Returns
+        -------
+        dict
+            DESCRIPTION.
+
+        """
         self.freq = {chr(i): 0 for i in range(65, 91)}
         self.nb_carract = 0
         for j, i in enumerate(self.text):
@@ -95,6 +143,15 @@ class Texte:
             self.freq2[i[0]] = round(i[1] * 100 / self.nb_carract, 2)
 
     def associer(self, langue_frequence: dict, precision: float = .01) -> dict:
+        """
+        Documentation is a documentation.
+
+        Returns
+        -------
+        dict
+            DESCRIPTION.
+
+        """
         self.freq3 = {chr(i):" " for i in range(65, 91)}
         for i, j in list(self.freq2.items()):
             if j  > 6:
@@ -106,6 +163,15 @@ class Texte:
                         print(i, k, a, self.freq3)
 
     def new_text(self):
+        """
+        Documentation is a documentation.
+
+        Returns
+        -------
+        dict
+            DESCRIPTION.
+
+        """
         text = ""
         for i in self.text:
             text += self.freq3.get(i)
@@ -113,6 +179,15 @@ class Texte:
 
 
     def __str__(self) -> str:
+        """
+        Documentation is a documentation.
+
+        Returns
+        -------
+        dict
+            DESCRIPTION.
+
+        """
         return self.text
 
 
