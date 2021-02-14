@@ -24,25 +24,22 @@ class ABR:
             else:
                 self.droit = ABR(x)
 
-    def taille(self, arbre=None) -> int:
-        if arbre is None:
-            arbre = self
-
-        r_is_none = arbre.droit is None
-        l_is_none = arbre.gauche is None
+    def taille(self) -> int:
+        r_is_none = self.droit is None
+        l_is_none = self.gauche is None
 
         if r_is_none and l_is_none:
             return_val = 1
 
         elif r_is_none and not l_is_none:
-            return_val = 1 + self.taille(arbre.gauche)
+            return_val = 1 + self.gauche.taille()
 
         elif not r_is_none and l_is_none:
-            return_val = 1 + self.taille(arbre.droit)
+            return_val = 1 + self.droit.taille()
 
         else:
-            return_val = 1 + self.taille(arbre.gauche) \
-                + self.taille(arbre.droit)
+            return_val = 1 + self.gauche.taille() \
+                + self.droit.taille()
 
         return return_val
 

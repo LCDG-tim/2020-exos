@@ -72,8 +72,8 @@ class Balle:
             )
 
     def move(self) -> None:
-        self.x = self.get_x() + (1, -4)[self.get_go_left()]
-        self.y = self.get_y() + (1, -4)[self.get_go_up()]
+        self.x = self.get_x() + (1, -1)[self.get_go_left()]
+        self.y = self.get_y() + (1, -1)[self.get_go_up()]
         self.rebound()
 
     def rebound(self) -> None:

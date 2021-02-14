@@ -52,6 +52,9 @@ class ListC:
                 m = m.suiv
         return n
 
+    def __len__(self) -> None:
+        return self.get_lengh()
+
     def get_last_chaine(self) -> Maillon:
         """O (n)"""
         m = None
@@ -79,13 +82,19 @@ class ListC:
     def add_start(self, new: Maillon) -> None:
         """O (1)"""
         if not self.is_empty():
+            if not isinstance(new, Maillon):
+                new = Maillon(new)
             new.suiv = self.tete
             self.tete = new
 
     def add_end(self, new: Maillon) -> None:
         """O (n)"""
+        if not isinstance(new, Maillon):
+            new = Maillon(new)
         if not self.is_empty():
             self.get_last_chaine().suiv = new
+        else:
+            self.tete = new
 
     def delete_start(self) -> None:
         """O (1)"""
