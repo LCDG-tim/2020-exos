@@ -14,7 +14,7 @@ PImage symetrie_horizontale(PImage img, int widthe, int heighte){
   PImage new_img = createImage(widthe, heighte, RGB);
   for (int i = 0; i < widthe; i++){
     for (int j = 0; j < heighte; j++){
-      new_img.set(i, j, img.get(i, heighte - j));
+      new_img.set(i, j, img.get(i, heighte - 1 - j));
     }
   }
   return new_img;
@@ -24,7 +24,7 @@ PImage symetrie_verticale(PImage img, int widthe, int heighte){
   PImage new_img = createImage(widthe, heighte, RGB);
   for (int i = 0; i < widthe; i++){
     for (int j = 0; j < heighte; j++){
-      new_img.set(i, j, img.get(widthe - i, j));
+      new_img.set(i, j, img.get(widthe - 1 - i, j));
     }
   }
   return new_img;

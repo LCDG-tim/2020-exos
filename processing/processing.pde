@@ -15,16 +15,17 @@ void setup(){
 
 
 void draw(){
-  
-  line(width / 2, height / 2, mouseX, mouseY);  
+  if (!mousePressed){
+    stroke(color(random(0, 255), random(0, 255), random(0, 255)));
+  }
+  line(width / 2, height / 2, mouseX, mouseY);
 }
 
 void mousePressed(){
-  //stroke(color(random(0, 255), random(0, 255), random(0, 255)));
-  if (mousePressed == LEFT){
+  if (mouseButton == LEFT){
     stroke(#ff0000);
   }
-  else if (mousePressed == RIGHT) {
+  else if (mouseButton == RIGHT) {
     stroke(#00ff00);
   }
 }
